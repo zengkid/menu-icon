@@ -12,28 +12,39 @@
         <h1>Ant Design of Angular</h1>
       </a>
     </div>
-    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/welcome">Welcome</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>Monitor</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>Workplace</a>
-          </li>
-        </ul>
-      </li>
-      <li nz-submenu nzOpen nzTitle="Form" nzIcon="form">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a>Basic Form</a>
-          </li>
-        </ul>
-      </li>
-    </ul>
+    <ul nz-menu nzTheme="dark" class="nz-menu" nzMode="inline"
+                [style]="isCollapsed ? {'width':'80px'} : {'width':'256px'}">
+                <ng-container *ngTemplateOutlet="menuTpl; context: { $implicit: menus }"></ng-container>
+                <ng-template #menuTpl let-menus>
+                    @for (menu of menus; track menu) {
+                        @if (!menu.children) {
+                            <li
+                                    nz-menu-item
+                                    [nzPaddingLeft]="menu.level * 24"
+                                    [nzDisabled]="menu.disabled"
+                                    [nzSelected]="menu.selected"
+                            >
+                                @if (menu.icon) {
+                                    <nz-icon [nzType]="menu.icon"/>
+                                }
+                                <span>{{ menu.label }}</span>
+                            </li>
+                        } @else {
+                            <li nz-submenu class="menuitem"
+                                [nzPaddingLeft]="menu.level * 24"
+                                [nzOpen]="menu.open"
+                                [nzTitle]="menu.label"
+                                [nzIcon]="menu.icon"
+                                [nzDisabled]="menu.disabled"
+                            >
+                                <ul>
+                                    <ng-container *ngTemplateOutlet="menuTpl; context: { $implicit: menu.children }"/>
+                                </ul>
+                            </li>
+                        }
+                    }
+                </ng-template>
+            </ul>
   </nz-sider>
   <nz-layout>
     <nz-header>
