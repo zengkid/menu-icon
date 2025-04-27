@@ -56,7 +56,7 @@ export class AppComponent {
         {
           level: 2,
           label: 'Group 3',
-          icon: 'icons:systemapp',
+          icon: 'icons:system',
           selected: false,
         }
       ]
